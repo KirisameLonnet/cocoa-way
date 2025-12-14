@@ -1,59 +1,63 @@
-# Cocoa Way
+# Cocoa-Way
 
-A proof-of-concept Wayland compositor for macOS, built with Rust, [Smithay](https://github.com/Smithay/smithay), and [winit](https://github.com/rust-windowing/winit).
+**Cocoa-Way** is a minimal yet functional Wayland Compositor designed specifically for **macOS**.  
+Built with [Rust](https://www.rust-lang.org/) and [Smithay](https://github.com/Smithay/smithay), it allows you to run Linux Wayland applications (like Niri, Sway, or generic clients) seamlessly on your Mac desktop without a virtual machine's GUI overhead.
 
-This project allows running Wayland clients (from a remote Linux machine via `waypipe` or locally) and displaying them natively on macOS windows. It serves as a modern, high-performance **alternative to XQuartz (X11)** for running Linux GUI applications on Mac.
+![Cocoa-Way Banner](assets/icon.png)
 
-> [!WARNING]
-> This is an **early Alpha version**. It is currently **unstable** and may experience **high latency**. Use for testing and development purposes only.
+## ✨ Features
 
-## Features & Highlights
-- **Native macOS Integration**: Runs as a standard macOS application using `winit`.
-- **Seamless Remote Apps**: Stream Linux applications to macOS over SSH using **waypipe-darwin** (optimized for macOS).
-- **High Performance**: Uses shared memory (SHM) for low-latency buffer updates.
-- **HiDPI / Retina Ready**: Correctly handles scaling for crisp text on MacBook displays.
-- **Modern Stack**: Built with **Rust**, **Smithay**, and **Wayland** protocols.
+*   **Native macOS Backend**: Seamless integration with macOS desktop environment.
+*   **External Client Support**: Host Linux Wayland applications via socket connection.
+*   **HiDPI Scaling**: Optimized for Retina displays.
+*   **Hardware Acceleration**: Efficient OpenGL rendering pipeline.
+*   **Polished Visuals**: server-side decorations with shadows and focus indicators.
 
-## Keywords used for Search
-macOS Wayland Compositor, Run Linux Apps on Mac, XQuartz Alternative, Waypipe macOS, Rust Wayland, Smithay Example, Remote Linux GUI, Retina Wayland, SSH X11 Forwarding Alternative.
+## 🚀 Getting Started
 
-## Prerequisities
+### Prerequisites
 
-- Rust (latest stable)
-- `pkg-config` (for waypipe build)
+*   **macOS** (Tested on Sonoma/Sequoia)
+*   **Rust Toolchain** (latest stable)
 
-## Build & Run
-
-### 1. Build the Compositor
-```bash
-cargo run --release
-```
-
-### 2. Install Waypipe-Darwin
-You need the specialized `waypipe-darwin` binary to handle connections.
-
-1.  Download/Clone the **waypipe-darwin** repository.
-2.  Build it: `cargo build --release --no-default-features`
-3.  Ensure the resulting binary is named `waypipe` and is in your system `$PATH` (e.g., copy to `/usr/local/bin`).
-
-### 3. Connect a Client
-Keep the compositor running. Open a new terminal and use the provided wrapper script to connect to your Linux machine.
-
-> [!TIP]
-> If the script refuses to run, grant it execution permissions first:
-> `chmod +x run_waypipe.sh`
+### Building
 
 ```bash
-# Example: Launch Falkon
-./run_waypipe.sh ssh user@your-server-ip <Program Name>
+git clone https://github.com/your-username/cocoa-way.git
+cd cocoa-way
+cargo build --release
 ```
 
-## Structure
-- `src/`: Compositor source code.
-- `run_waypipe.sh`: Helper script to set up environment (`XDG_RUNTIME_DIR`) and launch `waypipe`.
+### Running
 
-## License
+Start the compositor:
 
-**All rights reserved.**
+```bash
+RUST_LOG=info cargo run --release
+```
 
-No license is granted for the use, modification, or distribution of this software. You may view the source code for educational purposes, but you may not use it in any commercial or non-commercial projects without explicit written permission from the author.
+Wait for the "Wayland socket created" message.
+
+## 🔌 Connecting Clients
+
+Use the included helper script to connect clients via SSH or local socket.
+
+### Example: SSH Remote Client
+
+```bash
+./run_waypipe.sh ssh user@linux-host niri
+```
+
+### Example: Local Test Client
+
+```bash
+# In the cocoa-way directory, check test-client folder
+cargo run --bin test-client
+```
+
+## 📄 License
+
+**Copyright © 2025. All Rights Reserved.**
+
+This project is part of an academic research paper.  
+Unauthorised copying, modification, distribution, or use of this code, in whole or in part, is strictly prohibited to prevent plagiarism and preserve academic integrity.

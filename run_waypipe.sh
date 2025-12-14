@@ -1,23 +1,16 @@
 #!/bin/bash
-# Wrapper to launch Waypipe with the correct local XDG_RUNTIME_DIR for macos-wayland-compositor
-
-# Ensure TMPDIR ends with /
-TMP="${TMPDIR%/}/"
-export XDG_RUNTIME_DIR="${TMP}cocoa-way"
+# Auto-detect the running cocoa-way instance's runtime directory
+export XDG_RUNTIME_DIR=$(find /var/folders /tmp -type d -name "cocoa-way" 2>/dev/null | head -n 1)
 export WAYLAND_DISPLAY=wayland-1
 
-# Look for waypipe in PATH
-WAYPIPE_BIN="waypipe"
-SOCKET_SOCK="/tmp/waypipe-bridge.sock"
-
-# Verify waypipe exists
-if ! command -v "$WAYPIPE_BIN" &> /dev/null; then
-    echo "[Wrapper] Error: 'waypipe' not found in PATH."
-    echo "[Wrapper] Please install 'waypipe-darwin' (rename binary to waypipe) and ensure it is in your PATH."
+if [ -z "$XDG_RUNTIME_DIR" ]; then
+    echo "Error: Could not find cocoa-way runtime directory. Please ensure cocoa-way is running."
     exit 1
 fi
 
-echo "[Wrapper] Setting XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR"
-echo "[Wrapper] Running: $WAYPIPE_BIN --socket $SOCKET_SOCK $@"
+echo "Found cocoa-way at: $XDG_RUNTIME_DIR"
+echo "Running waypipe command..."
 
-exec "$WAYPIPE_BIN" --socket "$SOCKET_SOCK" "$@"
+# Execute waypipe with the provided arguments (e.g., ssh user@host niri)
+# waypipe will automatically use the exported WAYLAND_DISPLAY and XDG_RUNTIME_DIR to connect to our compositor
+exec waypipe "$@"

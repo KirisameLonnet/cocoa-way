@@ -1,5 +1,4 @@
 use winit::keyboard::{KeyCode, PhysicalKey};
-
 pub fn map_key(key: PhysicalKey) -> Option<u32> {
     match key {
         PhysicalKey::Code(code) => match code {
@@ -86,7 +85,6 @@ pub fn map_key(key: PhysicalKey) -> Option<u32> {
             KeyCode::Numpad3 => Some(81),
             KeyCode::Numpad0 => Some(82),
             KeyCode::NumpadDecimal => Some(83),
-             
             KeyCode::IntlBackslash => Some(86),  
             KeyCode::F11 => Some(87),
             KeyCode::F12 => Some(88),
