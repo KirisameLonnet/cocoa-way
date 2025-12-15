@@ -45,7 +45,7 @@ Use the included helper script to connect clients via SSH or local socket.
 ### Example: SSH Remote Client
 
 ```bash
-./run_waypipe.sh ssh user@linux-host niri
+./run_waypipe.sh ssh user@linux-host <Program Name>
 ```
 
 ### Example: Local Test Client
@@ -59,5 +59,4 @@ cargo run --bin test-client
 
 **Copyright © 2025. All Rights Reserved.**
 
-This project is part of an academic research paper.  
-Unauthorised copying, modification, distribution, or use of this code, in whole or in part, is strictly prohibited to prevent plagiarism and preserve academic integrity.
+No license is granted for the use, modification, or distribution of this software. You may view the source code for educational purposes, but you may not use it in any commercial or non-commercial projects without explicit written permission from the author.
