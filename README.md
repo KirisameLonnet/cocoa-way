@@ -1,4 +1,5 @@
 # Cocoa-Way
+<meta name="msvalidate.01" content="F2CE1613C439C59C4D742AC8049C1B5C" />
 
 **Cocoa-Way** is a minimal yet functional Wayland Compositor designed specifically for **macOS**.  
 Built with [Rust](https://www.rust-lang.org/) and [Smithay](https://github.com/Smithay/smithay), it allows you to run Linux Wayland applications (like Niri, Sway, or generic clients) seamlessly on your Mac desktop without a virtual machine's GUI overhead.
