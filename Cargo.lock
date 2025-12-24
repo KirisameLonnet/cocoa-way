@@ -648,7 +648,7 @@ dependencies = [
 
 [[package]]
 name = "cocoa-way"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "calloop 0.12.4",
  "env_logger",

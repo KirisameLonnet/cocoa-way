@@ -397,13 +397,16 @@ impl WinitEventLoop {
         // SAFETY: we don't drop event loop ourselves.
         let event_loop = unsafe { self.event_loop.get_mut() };
 
+        tracing::info!("Smithay: Starting pump_app_events");
         event_loop.pump_app_events(
             Some(Duration::ZERO),
             &mut WinitEventLoopApp {
                 inner: &mut self.inner,
                 callback,
             },
-        )
+        );
+        tracing::info!("Smithay: Finished pump_app_events");
+        PumpStatus::Continue
     }
 }
 

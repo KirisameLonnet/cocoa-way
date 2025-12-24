@@ -99,21 +99,32 @@ impl EGLContext {
         assert!(!config_id.is_null(), "EGL configuration id pointer is null");
         assert!(!context.is_null(), "EGLContext pointer is null");
 
-        let display = EGLDisplay::from_raw(display, config_id)?;
-        let pixel_format = display.get_pixel_format(config_id)?;
-
-        let span = info_span!(parent: &display.span, "egl_context", ptr = context as usize);
-
         Ok(EGLContext {
             context,
-            display,
+            display: EGLDisplay::from_raw(display, config_id)?,
             config_id,
-            pixel_format: Some(pixel_format),
-            user_data: Arc::new(UserDataMap::default()),
+            pixel_format: None,
+            user_data: Arc::new(UserDataMap::new()),
             externally_managed: true,
-            span,
+            span: info_span!("egl_context", ptr = context as usize),
         })
     }
+
+    #[cfg(target_os = "macos")]
+    pub fn new_dummy(display: &EGLDisplay) -> Self {
+        use std::ptr;
+        Self {
+            context: ptr::null(),
+            display: display.clone(),
+            config_id: ptr::null(),
+            pixel_format: None,
+            user_data: Arc::new(UserDataMap::new()),
+            externally_managed: true,
+            span: tracing::Span::none(),
+        }
+    }
+
+
 
     /// Creates a new configless `EGLContext` from a given `EGLDisplay`
     pub fn new(display: &EGLDisplay) -> Result<EGLContext, Error> {
@@ -361,7 +372,11 @@ impl EGLContext {
     #[instrument(level = "trace", skip_all, parent = &self.span, err)]
     #[profiling::function]
     pub unsafe fn make_current(&self) -> Result<(), MakeCurrentError> {
-        wrap_egl_call_bool(|| {
+        #[cfg(target_os = "macos")]
+        return Ok(());
+
+        #[cfg(not(target_os = "macos"))]
+        wrap_egl_call_bool(|| unsafe {
             ffi::egl::MakeCurrent(
                 **self.display.get_display_handle(),
                 ffi::egl::NO_SURFACE,
@@ -369,8 +384,10 @@ impl EGLContext {
                 self.context,
             )
         })
-        .map(|_| ())
-        .map_err(Into::into)
+        .map_err(|source| match source {
+            EGLError::ContextLost => MakeCurrentError::ContextLost(source),
+            _ => MakeCurrentError::MakeCurrentFailed(source),
+        })
     }
 
     /// Makes the OpenGL context the current context in the current thread with a surface to
@@ -382,6 +399,9 @@ impl EGLContext {
     /// being unbound again (see [`EGLContext::unbind`]).
     #[profiling::function]
     pub unsafe fn make_current_with_surface(&self, surface: &EGLSurface) -> Result<(), MakeCurrentError> {
+        #[cfg(target_os = "macos")]
+        return Ok(());
+        #[cfg(not(target_os = "macos"))]
         self.make_current_with_draw_and_read_surface(surface, surface)
     }
 
@@ -399,18 +419,21 @@ impl EGLContext {
         draw_surface: &EGLSurface,
         read_surface: &EGLSurface,
     ) -> Result<(), MakeCurrentError> {
-        let draw_surface_ptr = draw_surface.surface.load(Ordering::SeqCst);
-        let read_surface_ptr = read_surface.surface.load(Ordering::SeqCst);
-        wrap_egl_call_bool(|| {
+        #[cfg(target_os = "macos")]
+        return Ok(());
+        #[cfg(not(target_os = "macos"))]
+        wrap_egl_call_bool(|| unsafe {
             ffi::egl::MakeCurrent(
                 **self.display.get_display_handle(),
-                draw_surface_ptr,
-                read_surface_ptr,
+                draw_surface.surface.load(Ordering::SeqCst),
+                read_surface.surface.load(Ordering::SeqCst),
                 self.context,
             )
         })
-        .map(|_| ())
-        .map_err(Into::into)
+        .map_err(|source| match source {
+            EGLError::ContextLost => MakeCurrentError::ContextLost(source),
+            _ => MakeCurrentError::MakeCurrentFailed(source),
+        })
     }
 
     /// Returns true if the OpenGL context is the current one in the thread.

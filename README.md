@@ -4,6 +4,14 @@
 **Cocoa-Way** is a minimal yet functional Wayland Compositor designed specifically for **macOS**.  
 Built with [Rust](https://www.rust-lang.org/) and [Smithay](https://github.com/Smithay/smithay), it allows you to run Linux Wayland applications (like Niri, Sway, or generic clients) seamlessly on your Mac desktop without a virtual machine's GUI overhead.
 
+### 🎥 Demo Video
+
+[![Demo Video](https://img.youtube.com/vi/VS3vQp5i8YQ/0.jpg)](https://youtu.be/VS3vQp5i8YQ)
+
+> **Watch the full demo:** [https://youtu.be/VS3vQp5i8YQ](https://youtu.be/VS3vQp5i8YQ)
+
+*Demonstrating true protocol portability: The native macOS compositor (cocoa-way) seamlessly rendering standard Linux applications running inside OrbStack via Unix domain sockets.*
+
 
 ## ✨ Features
 
