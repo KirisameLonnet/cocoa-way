@@ -40,7 +40,7 @@ This project is part of the **"Turbo-Charged Protocol Virtualization"** research
 ### Building
 
 ```bash
-git clone https://github.com/your-username/cocoa-way.git
+git clone https://github.com/J-x-Z/cocoa-way.git
 cd cocoa-way
 cargo build --release
 ```
