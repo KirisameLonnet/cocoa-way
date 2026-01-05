@@ -81,6 +81,8 @@ cargo run --bin test-client
 
 ## 📄 License
 
-**Copyright © 2025. All Rights Reserved.**
+This project is licensed under the **GNU General Public License v3.0**.
 
-No license is granted for the use, modification, or distribution of this software. You may view the source code for educational purposes, but you may not use it in any commercial or non-commercial projects without explicit written permission from the author.
+Permissions of this strong copyleft license are conditioned on making available complete source code of licensed works and modifications, which include larger works using a licensed work, under the same license. Copyright and license notices must be preserved. Contributors provide an express grant of patent rights.
+
+See the [LICENSE](LICENSE) file for details.
