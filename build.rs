@@ -25,6 +25,10 @@ fn main() {
             "/opt/homebrew/lib/libxkbcommon.dylib",
             "/usr/local/lib/libxkbcommon.dylib",
         ]);
+        check_dependency("pixman", &[
+            "/opt/homebrew/lib/libpixman-1.dylib",
+            "/usr/local/lib/libpixman-1.dylib",
+        ]);
     }
 }
 

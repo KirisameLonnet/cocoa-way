@@ -37,11 +37,13 @@ This project is part of the **"Turbo-Charged Protocol Virtualization"** research
 *   **macOS** (Apple Silicon or Intel)
 *   **Rust Toolchain** (latest stable)
 *   **libxkbcommon** (keyboard handling library)
+*   **pixman** (pixel manipulation library)
+*   **pkg-config** (build helper)
 
 Install dependencies via Homebrew:
 
 ```bash
-brew install libxkbcommon
+brew install libxkbcommon pixman pkg-config
 ```
 
 ### Building
