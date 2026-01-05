@@ -34,8 +34,15 @@ This project is part of the **"Turbo-Charged Protocol Virtualization"** research
 
 ### Prerequisites
 
-*   **macOS** 
+*   **macOS** (Apple Silicon or Intel)
 *   **Rust Toolchain** (latest stable)
+*   **libxkbcommon** (keyboard handling library)
+
+Install dependencies via Homebrew:
+
+```bash
+brew install libxkbcommon
+```
 
 ### Building
 
