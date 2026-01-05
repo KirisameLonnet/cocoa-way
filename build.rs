@@ -19,5 +19,31 @@ fn main() {
                 println!("cargo:include={}", path);
             }
         }
+
+        // Check for required dependencies
+        check_dependency("xkbcommon", &[
+            "/opt/homebrew/lib/libxkbcommon.dylib",
+            "/usr/local/lib/libxkbcommon.dylib",
+        ]);
+    }
+}
+
+#[cfg(target_os = "macos")]
+fn check_dependency(name: &str, paths: &[&str]) {
+    let found = paths.iter().any(|p| std::path::Path::new(p).exists());
+    if !found {
+        eprintln!();
+        eprintln!("╔══════════════════════════════════════════════════════════════╗");
+        eprintln!("║  ERROR: Missing dependency '{}'", name);
+        eprintln!("╠══════════════════════════════════════════════════════════════╣");
+        eprintln!("║  Please install via Homebrew:                                ║");
+        eprintln!("║                                                              ║");
+        eprintln!("║    brew install lib{}                                   ║", name);
+        eprintln!("║                                                              ║");
+        eprintln!("║  Then rebuild:                                               ║");
+        eprintln!("║    cargo clean && cargo build --release                      ║");
+        eprintln!("╚══════════════════════════════════════════════════════════════╝");
+        eprintln!();
+        std::process::exit(1);
     }
 }
