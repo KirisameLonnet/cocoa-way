@@ -1,6 +1,18 @@
+# Rust
 target/
 build/
+
+# macOS
 .DS_Store
+
+# Logs
 *.log
+
+# Git
 **/.git/
+
+# Nix
+result
+result-*
+.direnv/
 
