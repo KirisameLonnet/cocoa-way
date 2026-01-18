@@ -22,8 +22,6 @@ fn check_pkg_config(pkg: &str, brew_hint: &str) {
     eprintln!("║  Homebrew:                                                   ║");
     eprintln!("║    brew install lib{}                                   ║", brew_hint);
     eprintln!("║                                                              ║");
-    eprintln!("║  Nix: enter a nix shell / nix develop so PKG_CONFIG_PATH is set");
-    eprintln!("║                                                              ║");
     eprintln!("║  Then rebuild:                                               ║");
     eprintln!("║    cargo clean && cargo build --release                      ║");
     eprintln!("╚══════════════════════════════════════════════════════════════╝");
