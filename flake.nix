@@ -28,6 +28,9 @@
           # Required libraries for cocoa-way
           libxkbcommon
           pixman
+          # Runtime tools for connecting Wayland clients
+          waypipe
+          openssh
         ] ++ pkgs.lib.optionals pkgs.stdenv.hostPlatform.isDarwin [
           # macOS frameworks (automatically provided by stdenv on Darwin)
           pkgs.libiconv
