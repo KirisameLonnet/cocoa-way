@@ -11,6 +11,14 @@ fi
 echo "Found cocoa-way at: $XDG_RUNTIME_DIR"
 echo "Running waypipe command..."
 
-# Execute waypipe with the provided arguments (e.g., ssh user@host niri)
-# waypipe will automatically use the exported WAYLAND_DISPLAY and XDG_RUNTIME_DIR to connect to our compositor
-exec waypipe "$@"
+# If the command is 'ssh', automatically add the recommended StreamLocalBindUnlink=yes option
+# This fixes "remote port forwarding failed" errors when the socket file already exists on the remote
+if [ "$1" = "ssh" ]; then
+    echo "Info: Detected SSH mode. Injecting '-o StreamLocalBindUnlink=yes' to fix socket conflicts."
+    # Insert the option after 'ssh'
+    shift
+    exec waypipe ssh -o StreamLocalBindUnlink=yes "$@"
+else
+    # Execute waypipe with the provided arguments
+    exec waypipe "$@"
+fi

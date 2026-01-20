@@ -81,6 +81,24 @@ Use the included helper script to connect clients via SSH or local socket.
 cargo run --bin test-client
 ```
 
+## ❓ Troubleshooting
+
+### SSH: "remote port forwarding failed"
+
+If you see this error:
+```
+Warning: remote port forwarding failed for listen path ...
+```
+It means a stale socket file exists on the remote host (e.g. from a crashed session).
+
+**Solution:**
+1. Our `./run_waypipe.sh` script automatically fixes this by adding `-o StreamLocalBindUnlink=yes`.
+2. If running manually, add the option yourself:
+   ```bash
+   waypipe ssh -o StreamLocalBindUnlink=yes user@host ...
+   ```
+3. Ensure the remote SSH server config (`/etc/ssh/sshd_config`) allows stream forwarding (`AllowStreamLocalForwarding yes` or `local`).
+
 ## 📄 License
 
 This project is licensed under the **GNU General Public License v3.0**.
