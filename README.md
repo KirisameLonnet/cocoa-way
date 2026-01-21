@@ -2,6 +2,7 @@
 
 <div align="center">
 
+[![Version](https://img.shields.io/badge/version-0.2.0-green.svg)](https://github.com/J-x-Z/cocoa-way/releases)
 [![Build Status](https://github.com/J-x-Z/cocoa-way/actions/workflows/release.yml/badge.svg)](https://github.com/J-x-Z/cocoa-way/actions)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Rust](https://img.shields.io/badge/Rust-1.75+-orange.svg)](https://www.rust-lang.org/)
@@ -15,6 +16,12 @@
 
 ---
 
+## 🎥 Demo Video
+
+[![Demo Video](https://img.youtube.com/vi/VS3vQp5i8YQ/0.jpg)](https://youtu.be/VS3vQp5i8YQ)
+
+> *True protocol portability: Cocoa-Way rendering Linux apps from OrbStack via Unix sockets.*
+
 ## ✨ Features
 
 | Feature | Description |
@@ -24,12 +31,6 @@
 | 📺 **HiDPI Ready** | Optimized for Retina displays with proper scaling |
 | 🎨 **Polished UI** | Server-side decorations with shadows and focus indicators |
 | ⚡ **Hardware Accelerated** | Efficient OpenGL rendering pipeline |
-
-## 🎥 Demo Video
-
-[![Demo Video](https://img.youtube.com/vi/VS3vQp5i8YQ/0.jpg)](https://youtu.be/VS3vQp5i8YQ)
-
-> *True protocol portability: Cocoa-Way rendering Linux apps from OrbStack via Unix sockets.*
 
 ## 📦 Installation
 
