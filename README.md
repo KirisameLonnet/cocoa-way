@@ -59,6 +59,11 @@ cargo build --release
 
 ## 🚀 Quick Start
 
+> ⚠️ **Required:** You must install [waypipe-darwin](https://github.com/J-x-Z/waypipe-darwin) to connect Linux apps.
+> ```bash
+> brew tap J-x-Z/tap && brew install waypipe-darwin
+> ```
+
 1. **Start the compositor:**
    ```bash
    cocoa-way
