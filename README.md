@@ -71,7 +71,8 @@ cargo build --release
 
 3. **Or use with OrbStack/Docker:**
    ```bash
-   waypipe --socket $XDG_RUNTIME_DIR/wayland-0 -- orb firefox
+   # In OrbStack Linux shell, with cocoa-way running on macOS:
+   WAYLAND_DISPLAY=/tmp/wayland-0 waypipe -s /tmp/wayland-0 client firefox
    ```
 
 ## 🏗️ Architecture
