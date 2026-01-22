@@ -1,0 +1,99 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build-macos:
+    runs-on: macos-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install dependencies
+        run: brew install libxkbcommon pixman pkg-config
+
+      - name: Build for arm64
+        run: cargo build --release
+
+      - name: Create .app Bundle
+        run: |
+          APP_NAME="Cocoa-Way"
+          APP_DIR="${APP_NAME}.app"
+          VERSION="${GITHUB_REF_NAME#v}"
+          mkdir -p "${APP_DIR}/Contents/MacOS"
+          mkdir -p "${APP_DIR}/Contents/Resources"
+          
+          cp target/release/cocoa-way "${APP_DIR}/Contents/MacOS/"
+          cp assets/icon.png "${APP_DIR}/Contents/Resources/AppIcon.png"
+          
+          cat > "${APP_DIR}/Contents/Info.plist" << 'PLIST'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+              <key>CFBundleExecutable</key>
+              <string>cocoa-way</string>
+              <key>CFBundleIdentifier</key>
+              <string>com.jxz.cocoa-way</string>
+              <key>CFBundleName</key>
+              <string>Cocoa-Way</string>
+              <key>CFBundleDisplayName</key>
+              <string>Cocoa-Way</string>
+              <key>CFBundleVersion</key>
+              <string>VERSION_PLACEHOLDER</string>
+              <key>CFBundleShortVersionString</key>
+              <string>VERSION_PLACEHOLDER</string>
+              <key>CFBundlePackageType</key>
+              <string>APPL</string>
+              <key>CFBundleIconFile</key>
+              <string>AppIcon</string>
+              <key>LSMinimumSystemVersion</key>
+              <string>11.0</string>
+              <key>NSHighResolutionCapable</key>
+              <true/>
+              <key>LSApplicationCategoryType</key>
+              <string>public.app-category.developer-tools</string>
+          </dict>
+          </plist>
+          PLIST
+          sed -i '' "s/VERSION_PLACEHOLDER/${VERSION}/g" "${APP_DIR}/Contents/Info.plist"
+
+      - name: Create ZIP archive
+        run: |
+          zip -r "Cocoa-Way-${{ github.ref_name }}-arm64-macos.zip" Cocoa-Way.app
+
+      - name: Create DMG
+        run: |
+          hdiutil create -volname "Cocoa-Way" -srcfolder Cocoa-Way.app -ov -format UDZO "Cocoa-Way-${{ github.ref_name }}-arm64-macos.dmg"
+
+      - name: Upload Release Assets
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            Cocoa-Way-${{ github.ref_name }}-arm64-macos.zip
+            Cocoa-Way-${{ github.ref_name }}-arm64-macos.dmg
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Calculate SHA256
+        id: sha
+        run: |
+          SHA=$(shasum -a 256 "Cocoa-Way-${{ github.ref_name }}-arm64-macos.zip" | cut -d ' ' -f 1)
+          echo "sha256=$SHA" >> $GITHUB_OUTPUT
+          echo "SHA256: $SHA"
+
+    outputs:
+      sha256: ${{ steps.sha.outputs.sha256 }}
+

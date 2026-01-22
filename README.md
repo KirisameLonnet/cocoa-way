@@ -1,90 +1,141 @@
 # Cocoa-Way
-<meta name="msvalidate.01" content="F2CE1613C439C59C4D742AC8049C1B5C" />
 
-**Cocoa-Way** is a minimal yet functional Wayland Compositor designed specifically for **macOS**.  
-Built with [Rust](https://www.rust-lang.org/) and [Smithay](https://github.com/Smithay/smithay), it allows you to run Linux Wayland applications (like Niri, Sway, or generic clients) seamlessly on your Mac desktop without a virtual machine's GUI overhead.
+<div align="center">
 
-### 🎥 Demo Video
+[![Version](https://img.shields.io/badge/version-0.2.0-green.svg)](https://github.com/J-x-Z/cocoa-way/releases)
+[![Build Status](https://github.com/J-x-Z/cocoa-way/actions/workflows/release.yml/badge.svg)](https://github.com/J-x-Z/cocoa-way/actions)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![Rust](https://img.shields.io/badge/Rust-1.75+-orange.svg)](https://www.rust-lang.org/)
+[![macOS](https://img.shields.io/badge/macOS-11.0+-black.svg)](https://www.apple.com/macos/)
+[![Mentioned in Awesome Rust](https://awesome.re/mentioned-badge.svg)](https://github.com/rust-unofficial/awesome-rust)
+[![Awesome Mac](https://img.shields.io/badge/Awesome-macOS-black?logo=apple)](https://github.com/jaywcjlove/awesome-mac)
+
+**Native macOS Wayland compositor for running Linux apps seamlessly**
+
+[Demo Video](#-demo-video) • [Install](#-installation) • [Quick Start](#-quick-start) • [Architecture](#-architecture)
+
+</div>
+
+---
+
+## 🎥 Demo Video
 
 [![Demo Video](https://img.youtube.com/vi/VS3vQp5i8YQ/0.jpg)](https://youtu.be/VS3vQp5i8YQ)
 
-> **Watch the full demo:** [https://youtu.be/VS3vQp5i8YQ](https://youtu.be/VS3vQp5i8YQ)
-
-*Demonstrating true protocol portability: The native macOS compositor (cocoa-way) seamlessly rendering standard Linux applications running inside OrbStack via Unix domain sockets.*
-
+> *True protocol portability: Cocoa-Way rendering Linux apps from OrbStack via Unix sockets.*
 
 ## ✨ Features
 
-*   **Native macOS Backend**: Seamless integration with macOS desktop environment.
-*   **External Client Support**: Host Linux Wayland applications via socket connection.
-*   **HiDPI Scaling**: Optimized for Retina displays.
-*   **Hardware Acceleration**: Efficient OpenGL rendering pipeline.
-*   **Polished Visuals**: server-side decorations with shadows and focus indicators.
+| Feature | Description |
+|---------|-------------|
+| 🍎 **Native macOS** | Metal/OpenGL rendering, seamless desktop integration |
+| 🚀 **Zero VM Overhead** | Direct Wayland protocol via socket, no virtualization |
+| 📺 **HiDPI Ready** | Optimized for Retina displays with proper scaling |
+| 🎨 **Polished UI** | Server-side decorations with shadows and focus indicators |
+| ⚡ **Hardware Accelerated** | Efficient OpenGL rendering pipeline |
 
-## 📚 Research
+## 📦 Installation
 
-This project is part of the **"Turbo-Charged Protocol Virtualization"** research initiative. See the [paper folder](../paper/) for:
-- Full manuscript draft
-- SIMD benchmark harness
-- Architecture diagrams
-
-**Key Innovation**: Zero-Cost cross-platform Wayland via Rust trait monomorphization + SIMD-accelerated pixel conversion.
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-*   **macOS** (Apple Silicon or Intel)
-*   **Rust Toolchain** (latest stable)
-*   **libxkbcommon** (keyboard handling library)
-*   **pixman** (pixel manipulation library)
-*   **pkg-config** (build helper)
-
-Install dependencies via Homebrew:
+### Homebrew (Recommended)
 
 ```bash
-brew install libxkbcommon pixman pkg-config
+brew tap J-x-Z/tap
+brew install cocoa-way waypipe-darwin
 ```
 
-### Building
+### Download Binary
+
+Download the latest `.dmg` or `.zip` from [Releases](https://github.com/J-x-Z/cocoa-way/releases).
+
+### Build from Source
 
 ```bash
+# Install dependencies
+brew install libxkbcommon pixman pkg-config
+
+# Clone and build
 git clone https://github.com/J-x-Z/cocoa-way.git
 cd cocoa-way
 cargo build --release
 ```
 
-### Running
+## 🚀 Quick Start
 
-Start the compositor:
+> ⚠️ **Required:** You must install [waypipe-darwin](https://github.com/J-x-Z/waypipe-darwin) to connect Linux apps.
+> ```bash
+> brew tap J-x-Z/tap && brew install waypipe-darwin
+> ```
 
-```bash
-cargo run --release
+1. **Start the compositor:**
+   ```bash
+   cocoa-way
+   ```
+
+2. **Connect Linux apps via SSH:**
+   ```bash
+   ./run_waypipe.sh ssh user@linux-host firefox
+   ```
+
+## 🏗️ Architecture
+
+```mermaid
+graph LR
+    subgraph macOS
+        CW[Cocoa-Way<br/>Compositor]
+        WP1[waypipe<br/>client]
+    end
+    
+    subgraph Linux VM/Container
+        WP2[waypipe<br/>server]
+        APP[Linux App<br/>Firefox, etc]
+    end
+    
+    APP -->|Wayland Protocol| WP2
+    WP2 <-->|SSH/Socket| WP1
+    WP1 -->|Wayland Protocol| CW
+    CW -->|Metal/OpenGL| Display[macOS Display]
 ```
 
-Wait for the "Wayland socket created" message.
+## 🆚 Comparison
 
-## 🔌 Connecting Clients
+| Solution | Latency | HiDPI | Native Integration | Setup Complexity |
+|----------|---------|-------|--------------------|------------------|
+| **Cocoa-Way** | ⚡ Low | ✅ | ✅ Native windows | 🟢 Easy |
+| XQuartz | 🐢 High | ⚠️ Partial | ⚠️ X11 quirks | 🟡 Medium |
+| VNC | 🐢 High | ❌ | ❌ Full screen | 🟡 Medium |
+| VM GUI | 🐢 High | ⚠️ Partial | ❌ Separate window | 🔴 Complex |
 
-Use the included helper script to connect clients via SSH or local socket.
+## 🗺️ Roadmap
 
-### Example: SSH Remote Client
+- [x] macOS backend (Metal/OpenGL)
+- [x] Waypipe integration
+- [x] HiDPI scaling
+- [ ] 🚧 Windows backend ([win-way](https://github.com/J-x-Z/win-way))
+- [ ] 📱 Android NDK backend (planned)
+- [ ] Multi-monitor support
+- [ ] Clipboard sync
 
+## 📚 Research
+
+This project is part of the **"Turbo-Charged Protocol Virtualization"** research initiative exploring zero-cost cross-platform Wayland via Rust trait monomorphization + SIMD-accelerated pixel conversion.
+
+## ❓ Troubleshooting
+
+<details>
+<summary><b>SSH: "remote port forwarding failed"</b></summary>
+
+A stale socket file exists on the remote host. Our `run_waypipe.sh` script handles this automatically with `-o StreamLocalBindUnlink=yes`.
+
+If running manually:
 ```bash
-./run_waypipe.sh ssh user@linux-host <Program Name>
+waypipe ssh -o StreamLocalBindUnlink=yes user@host ...
 ```
+</details>
 
-### Example: Local Test Client
+## 🤝 Contributing
 
-```bash
-# In the cocoa-way directory, check test-client folder
-cargo run --bin test-client
-```
+Contributions welcome! Please open an issue first to discuss major changes.
 
 ## 📄 License
 
-This project is licensed under the **GNU General Public License v3.0**.
-
-Permissions of this strong copyleft license are conditioned on making available complete source code of licensed works and modifications, which include larger works using a licensed work, under the same license. Copyright and license notices must be preserved. Contributors provide an express grant of patent rights.
-
-See the [LICENSE](LICENSE) file for details.
+[GPL-3.0](LICENSE) - Copyright (c) 2024-2025 J-x-Z
