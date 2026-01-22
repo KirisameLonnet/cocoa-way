@@ -69,12 +69,6 @@ cargo build --release
    ./run_waypipe.sh ssh user@linux-host firefox
    ```
 
-3. **Or use with OrbStack/Docker:**
-   ```bash
-   # In OrbStack Linux shell, with cocoa-way running on macOS:
-   WAYLAND_DISPLAY=/tmp/wayland-0 waypipe -s /tmp/wayland-0 client firefox
-   ```
-
 ## 🏗️ Architecture
 
 ```mermaid
